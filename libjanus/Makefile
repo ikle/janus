@@ -10,7 +10,7 @@ TARGET = $(SONAME).$(MINOR).$(RELEASE)
 all: $(TARGET)
 
 clean:
-	rm -f *.o $(NAME)*
+	rm -f *.o $(NAME)* test
 
 PREFIX ?= /usr/local
 
@@ -32,3 +32,7 @@ $(TARGET): node.o
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
 	ln -sf $(TARGET) $(SONAME)
 	ln -sf $(SONAME) $(NAME)
+
+test: $(TARGET) test.c
+	$(CC) $(CFLAGS) -g $(LDFLAGS) -L$(CURDIR) -ljanus -Wl,-rpath,$(CURDIR) \
+	      test.c -o $@
