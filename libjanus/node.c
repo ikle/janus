@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <stdarg.h>
 #include <glib.h>
 
 #include "janus.h"
@@ -101,5 +102,83 @@ int janus_node_value_set (const struct janus_node *n, const char *value)
 		g_unlink (path) == 0;
 
 	g_free (path);
+	return status;
+}
+
+/*
+ * High-level interface to operate configuration
+ */
+static struct janus_node *janus_get_nodev (const struct janus_node *root,
+					   va_list ap)
+{
+	const char *name;
+	struct janus_node *node, *last;
+
+	assert (root != NULL);
+
+	for (last = NULL; (name = va_arg (ap, const char *)) != NULL;) {
+		node = janus_node_get (last == NULL ? root : last, name);
+		janus_node_free (last);
+
+		if (node == NULL)
+			return NULL;
+
+		last = node;
+	}
+
+	return last;
+}
+
+struct janus_node *janus_get_node (const struct janus_node *root, ...)
+{
+	va_list ap;
+	struct janus_node *node;
+
+	va_start (ap, root);
+	node = janus_get_nodev (root, ap);
+	va_end (ap);
+
+	return node;
+}
+
+char *janus_get_value (const struct janus_node *root, ...)
+{
+	va_list ap;
+	struct janus_node *node;
+	char *value;
+
+	assert (root != NULL);
+
+	va_start (ap, root);
+	node = janus_get_nodev (root, ap);
+	va_end (ap);
+
+	if (node == NULL)
+		return NULL;
+
+	value = janus_node_value_get (node);
+	janus_node_free (node);
+
+	return value;
+}
+
+int janus_set_value (const struct janus_node *root, const char *value, ...)
+{
+	va_list ap;
+	struct janus_node *node;
+	int status;
+
+	assert (root  != NULL);
+
+	va_start (ap, value);
+	node = janus_get_nodev (root, ap);
+	va_end (ap);
+
+	if (node == NULL)
+		return 0;
+
+	status = janus_node_value_set (node, value);
+	janus_node_free (node);
+
 	return status;
 }

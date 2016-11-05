@@ -2,7 +2,7 @@ NAME = libjanus.so
 
 MAJOR   = 0
 MINOR   = 0
-RELEASE = 0
+RELEASE = 1
 
 SONAME = $(NAME).$(MAJOR)
 TARGET = $(SONAME).$(MINOR).$(RELEASE)
