@@ -1,4 +1,4 @@
-TARGETS = item-test
+TARGETS = item-test node-test
 
 CC ?= gcc
 CFLAGS ?= -O3
@@ -15,3 +15,4 @@ install: $(TARGETS)
 	install -s -m 0755 $^ $(DESTDIR)/$(PREFIX)/bin
 
 item-test: item.o
+node-test: node.o
