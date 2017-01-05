@@ -34,7 +34,6 @@ static void janus_node_unlink (struct janus_node *n)
 {
 	struct janus_node **p;
 
-	assert (n         != NULL);
 	assert (n->parent != NULL);
 
 	for (p = &n->parent->child; *p != NULL; p = &(*p)->next)
