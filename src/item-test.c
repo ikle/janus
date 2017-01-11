@@ -2,19 +2,17 @@
 #include <string.h>
 
 #include "item.h"
-
-#define COUNT_MIN  10
-#define LEN_MIN    256
+#include "limits.h"
 
 int main (int argc, char *argv[])
 {
-	char buf[ITEM_POOL_SIZE (COUNT_MIN, LEN_MIN)];
+	char buf[ITEM_POOL_SIZE (JANUS_ITEM_COUNT, JANUS_LINE_LENGTH)];
 	struct item_pool c;
 	struct item *i;
 
 	printf ("allocated %zu bytes for at least %u items and "
 		"at least %u bytes line size\n",
-		sizeof (buf), COUNT_MIN, LEN_MIN);
+		sizeof (buf), JANUS_ITEM_COUNT, JANUS_LINE_LENGTH);
 
 	item_pool_init (&c, buf, sizeof (buf));
 
