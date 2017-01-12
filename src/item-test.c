@@ -21,10 +21,10 @@ int main (int argc, char *argv[])
 		(i = item_read (&c, stdin)) != NULL;
 		item_pool_reset (&c)
 	)
-		item_write (stdout, 0, NULL, i);
+		item_write (NULL, i, stdout);
 
 	if (errno != 0) {
-		item_write (stdout, errno, strerror (errno), NULL);
+		item_write (strerror (errno), NULL, stdout);
 		return 1;
 	}
 

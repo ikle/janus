@@ -31,6 +31,6 @@ void item_pool_reset (struct item_pool *c);
 struct item *item_read (struct item_pool *c, FILE *in);
 
 /* returns nonzero on success */
-int item_write (FILE *out, int status, const char *prefix, struct item *i);
+int item_write (const char *prefix, struct item *i, FILE *out);
 
 #endif  /* _JANUS_IBUF_H */

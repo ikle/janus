@@ -139,12 +139,9 @@ static int write_escaped (const char *p, FILE *out)
 	return fputc ('"', out) != EOF;
 }
 
-int item_write (FILE *out, int status, const char *prefix, struct item *i)
+int item_write (const char *prefix, struct item *i, FILE *out)
 {
 	char *p;
-
-	if (status >= 0 && fprintf (out, "%d", status) < 1)
-		return 0;
 
 	if (prefix != NULL && !write_escaped (prefix, out))
 		return 0;
