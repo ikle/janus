@@ -1,4 +1,4 @@
-TARGETS = item-test node-test conf.o
+TARGETS = item-test node-test conf-test
 
 CC ?= gcc
 CFLAGS ?= -O3
@@ -16,3 +16,4 @@ install: $(TARGETS)
 
 item-test: item.o
 node-test: node.o
+conf-test: conf.o node.o item.o
