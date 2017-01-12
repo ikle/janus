@@ -129,3 +129,47 @@ int janus_conf_commit (struct janus_conf *c)
 	janus_node_commit (&c->root);
 	return 0;
 }
+
+/* show_* helpers return nonzero on succes */
+static int show_colour (struct janus_node *n, FILE *to)
+{
+	return fputs (n->red ? " +" : n->black ? " -" : " \" \"", to) != EOF;
+}
+
+static int show_node (struct janus_node *n, FILE *to)
+{
+	struct janus_node *p;
+
+	for (p = n->child; p != NULL; p = p->next) {
+		if (fputs (p->child == NULL ? "leaf" : "group", to) == EOF ||
+		    !show_colour (p, to) ||
+		    !write_escaped (p->name, to) ||
+		    fputc ('\n', to) == EOF)
+			return 0;
+
+		if (p->child != NULL)
+			if (!show_node (p, to) ||
+			    fputs ("end", to) == EOF ||
+			    !show_colour (p, to) ||
+			    fputc ('\n', to) == EOF)
+				return 0;
+	}
+
+	return 1;
+}
+
+int janus_conf_show (struct janus_conf *c, struct item *i, FILE *to)
+{
+	struct janus_node *n;
+
+	assert (c != NULL);
+
+	for (n = &c->root; i != NULL; i = i->next)
+		if ((n = janus_node_find (n, i->data)) == NULL)
+			return -errno;
+
+	if (!show_node (n, to))
+		return -errno;
+
+	return 0;
+}
