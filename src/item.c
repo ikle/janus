@@ -119,7 +119,7 @@ eol:
 	return list;
 }
 
-static int write_escaped (const char *p, FILE *out)
+int write_escaped (const char *p, FILE *out)
 {
 	if (*p != '\0' && strpbrk (p, " \"") == NULL)
 		return fprintf (out, " %s", p) > 0;
