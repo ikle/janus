@@ -14,13 +14,14 @@ struct janus_node *janus_node_alloc (struct janus_node *parent,
 	assert (name   != NULL);
 
 	if ((n = malloc (sizeof (*n))) == NULL)
-		return NULL;
+		goto no_node;
 
 	n->parent = parent;
 	n->next   = parent->child;
 	n->child  = NULL;
 
-	n->name  = strdup (name);
+	if ((n->name = strdup (name)) == NULL)
+		goto no_name;
 
 	n->value = value;
 	n->black = 0;
@@ -28,6 +29,10 @@ struct janus_node *janus_node_alloc (struct janus_node *parent,
 
 	parent->child = n;
 	return n;
+no_name:
+	free (n);
+no_node:
+	return NULL;
 }
 
 static void janus_node_unlink (struct janus_node *n)
