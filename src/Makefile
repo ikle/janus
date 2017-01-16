@@ -1,4 +1,4 @@
-TARGETS = item-test node-test conf-test
+TARGETS = item-test node-test conf-test type.o
 
 CC ?= gcc
 CFLAGS ?= -O3
