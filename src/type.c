@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <regex.h>
 #include <arpa/inet.h>
 
 #include "type.h"
@@ -133,9 +134,24 @@ static int is_ipv6_net (const char *data)
 	return (ntohl (a.s6_addr32[0]) & ~(~0UL << (32 - m))) == 0;
 }
 
-int type_check (enum janus_type type, const char *data)
+static int re_match (const char *re, const char *data)
+{
+	regex_t reg;
+	int ret;
+
+	if (regcomp (&reg, re, REG_EXTENDED | REG_NOSUB) != 0)
+		return 0;
+
+	ret = regexec (&reg, data, 0, NULL, 0);
+	regfree (&reg);
+
+	return ret == 0;
+}
+
+int type_check (enum janus_type type, const char *arg, const char *data)
 {
 	switch (type) {
+	case JANUS_TYPE_RE:		return re_match (arg, data);
 	case JANUS_TYPE_NUMBER:		return is_number    (data);
 	case JANUS_TYPE_IPV4:		return is_ipv4      (data);
 	case JANUS_TYPE_IPV4_HOST:	return is_ipv4_host (data);

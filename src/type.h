@@ -2,6 +2,7 @@
 #define _JANUS_TYPE_H  1
 
 enum janus_type {
+	JANUS_TYPE_RE,
 	JANUS_TYPE_NUMBER,
 	JANUS_TYPE_IPV4,
 	JANUS_TYPE_IPV4_HOST,
@@ -11,6 +12,6 @@ enum janus_type {
 	JANUS_TYPE_IPV6_NET,
 };
 
-int type_check (enum janus_type type, const char *data);
+int type_check (enum janus_type type, const char *arg, const char *data);
 
 #endif  /* _JANUS_TYPE_H */
