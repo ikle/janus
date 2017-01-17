@@ -2,6 +2,7 @@
 #define _JANUS_TYPE_H  1
 
 enum janus_type {
+	JANUS_TYPE_LITERAL,
 	JANUS_TYPE_RE,
 	JANUS_TYPE_NUMBER,
 	JANUS_TYPE_IPV4,

@@ -151,6 +151,7 @@ static int re_match (const char *re, const char *data)
 int type_check (enum janus_type type, const char *arg, const char *data)
 {
 	switch (type) {
+	case JANUS_TYPE_LITERAL:	return strcmp (arg, data) == 0;
 	case JANUS_TYPE_RE:		return re_match (arg, data);
 	case JANUS_TYPE_NUMBER:		return is_number    (data);
 	case JANUS_TYPE_IPV4:		return is_ipv4      (data);
