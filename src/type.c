@@ -2,11 +2,14 @@
 #include <errno.h>
 #include <limits.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
 #include <regex.h>
+#include <unistd.h>
 #include <arpa/inet.h>
 
+#include "limits.h"
 #include "type.h"
 
 static int get_number (const char *data, int *n)
@@ -148,6 +151,46 @@ static int re_match (const char *re, const char *data)
 	return ret == 0;
 }
 
+static int file_match (FILE *f, const char *data)
+{
+	char line[JANUS_LINE_LENGTH];
+	size_t len;
+
+	if (f == NULL)
+		return 0;
+
+	while ((fgets (line, sizeof (line), f)) != NULL) {
+		len = strlen (line);
+
+		if (len > 0 && line[len - 1] == '\n')
+			line[len - 1] = '\0';
+
+		if (strcmp (line, data) == 0)
+			return 1;
+	}
+
+	return 0;
+}
+
+static int ext_match (const char *path, const char *data)
+{
+	FILE *f;
+	int ret = 0;
+
+	if (access (path, X_OK) == 0) {
+		f = popen (path, "r");
+		ret = file_match (f, data);
+		pclose (f);
+	}
+	else if (access (path, R_OK) == 0) {
+		f = fopen (path, "r");
+		ret = file_match (f, data);
+		fclose (f);
+	}
+
+	return ret;
+}
+
 int type_check (enum janus_type type, const char *arg, const char *data)
 {
 	switch (type) {
@@ -160,6 +203,7 @@ int type_check (enum janus_type type, const char *arg, const char *data)
 	case JANUS_TYPE_IPV6:		return is_ipv6      (data);
 	case JANUS_TYPE_IPV6_HOST:	return is_ipv6_host (data);
 	case JANUS_TYPE_IPV6_NET:	return is_ipv6_net  (data);
+	case JANUS_TYPE_EXTERNAL:	return ext_match (arg, data);
 	}
 
 	return 0;

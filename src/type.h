@@ -11,6 +11,7 @@ enum janus_type {
 	JANUS_TYPE_IPV6,
 	JANUS_TYPE_IPV6_HOST,
 	JANUS_TYPE_IPV6_NET,
+	JANUS_TYPE_EXTERNAL,
 };
 
 int type_check (enum janus_type type, const char *arg, const char *data);
