@@ -1,0 +1,29 @@
+set interfaces
+enter interfaces
+where
+set ethernet eth0
+set ethernet eth1
+set ethernet eth2
+leave
+set system hostname ikle
+set services dhcp
+set services snmp
+show
+delete system
+show
+commit
+show
+delete interfaces ethernet eth1
+show
+commit
+show
+delete interfaces ethernet
+commit
+show
+set interfaces ethernet eth0
+set interfaces ethernet eth1
+show
+delete
+show
+commit
+show

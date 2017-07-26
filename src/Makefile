@@ -17,3 +17,6 @@ install: $(TARGETS)
 item-test: item.o
 node-test: node.o
 conf-test: conf.o node.o item.o
+
+test: conf-test
+	./conf-test < test/conf.session
