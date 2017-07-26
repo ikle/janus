@@ -1,5 +1,5 @@
-#ifndef _JANUS_NODE_H
-#define _JANUS_NODE_H  1
+#ifndef JANUS_NODE_H
+#define JANUS_NODE_H  1
 
 #include <stddef.h>
 
@@ -23,4 +23,4 @@ struct janus_node *janus_node_find (struct janus_node *parent,
 void janus_node_black (struct janus_node *n);
 int janus_node_commit (struct janus_node *root);
 
-#endif  /* _JANUS_NODE_H */
+#endif  /* JANUS_NODE_H */

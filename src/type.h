@@ -1,5 +1,5 @@
-#ifndef _JANUS_TYPE_H
-#define _JANUS_TYPE_H  1
+#ifndef JANUS_TYPE_H
+#define JANUS_TYPE_H  1
 
 enum janus_type {
 	JANUS_TYPE_LITERAL,
@@ -16,4 +16,4 @@ enum janus_type {
 
 int type_check (enum janus_type type, const char *arg, const char *data);
 
-#endif  /* _JANUS_TYPE_H */
+#endif  /* JANUS_TYPE_H */

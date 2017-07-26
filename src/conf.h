@@ -1,5 +1,5 @@
-#ifndef _JANUS_CONF_H
-#define _JANUS_CONF_H  1
+#ifndef JANUS_CONF_H
+#define JANUS_CONF_H  1
 
 #include "item.h"
 #include "limits.h"
@@ -29,4 +29,4 @@ int janus_conf_leave (struct janus_conf *c);
 int janus_conf_home  (struct janus_conf *c);
 int janus_conf_where (struct janus_conf *c, FILE *to);
 
-#endif  /* _JANUS_CONF_H */
+#endif  /* JANUS_CONF_H */

@@ -1,5 +1,5 @@
-#ifndef _JANUS_ITEM_H
-#define _JANUS_ITEM_H  1
+#ifndef JANUS_ITEM_H
+#define JANUS_ITEM_H  1
 
 #include <stddef.h>
 #include <stdio.h>
@@ -33,4 +33,4 @@ struct item *item_read (struct item_pool *c, FILE *in);
 int write_escaped (const char *p, FILE *out);
 int item_write (const char *prefix, struct item *i, FILE *out);
 
-#endif  /* _JANUS_IBUF_H */
+#endif  /* JANUS_IBUF_H */
