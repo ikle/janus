@@ -34,7 +34,15 @@ static void show_node (int level, struct janus_node *n, FILE *to)
 	struct janus_node *p;
 
 	for (p = n->child; p != NULL; p = p->next) {
+		if (p->child != NULL && p->child->value) {
+			show_node (level, p, to);
+			continue;
+		}
+
 		show_prefix (level, p, to);
+
+		if (p->value)
+			fprintf (to, "%s ", n->name);
 
 		fputs (p->name, to);
 
