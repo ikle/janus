@@ -3,6 +3,35 @@
 
 #include "conf.h"
 
+static int process (struct janus_conf *c, struct item *i, FILE *to)
+{
+	if (strcmp (i->data, "set") == 0)
+		return janus_conf_set (c, i->next);
+
+	if (strcmp (i->data, "delete") == 0)
+		return janus_conf_delete (c, i->next);
+
+	if (strcmp (i->data, "commit") == 0)
+		return i->next != NULL ? -EINVAL : janus_conf_commit (c);
+
+	if (strcmp (i->data, "show") == 0)
+		return janus_conf_show (c, i->next, to);
+
+	if (strcmp (i->data, "enter") == 0)
+		return janus_conf_enter (c, i->next);
+
+	if (strcmp (i->data, "leave") == 0)
+		return i->next != NULL ? -EINVAL : janus_conf_leave (c);
+
+	if (strcmp (i->data, "home") == 0)
+		return i->next != NULL ? -EINVAL : janus_conf_home (c);
+
+	if (strcmp (i->data, "where") == 0)
+		return i->next != NULL ? -EINVAL : janus_conf_where (c, to);
+
+	return -EINVAL;
+}
+
 static void status (FILE *to)
 {
 	fprintf (to, "status %d", errno);
@@ -29,32 +58,7 @@ int main (int argc, char *argv[])
 		!ferror (to) && (i = item_read (&pool, from)) != NULL;
 		status (to), errno = 0, item_pool_reset (&pool)
 	)
-		errno =
-			strcmp (i->data, "set") == 0 ?
-				-janus_conf_set (&c, i->next) :
-			strcmp (i->data, "delete") == 0 ?
-				-janus_conf_delete (&c, i->next) :
-			strcmp (i->data, "commit") == 0 ?
-				i->next != NULL ?
-					EINVAL :
-					-janus_conf_commit (&c) :
-			strcmp (i->data, "show") == 0 ?
-				-janus_conf_show (&c, i->next, to) :
-			strcmp (i->data, "enter") == 0 ?
-				-janus_conf_enter (&c, i->next) :
-			strcmp (i->data, "leave") == 0 ?
-				i->next != NULL ?
-					EINVAL :
-					-janus_conf_leave (&c) :
-			strcmp (i->data, "home") == 0 ?
-				i->next != NULL ?
-					EINVAL :
-					-janus_conf_home (&c) :
-			strcmp (i->data, "where") == 0 ?
-				i->next != NULL ?
-					EINVAL :
-					-janus_conf_where (&c, to) :
-			EINVAL;
+		errno = -process (&c, i, to);
 
 	return ferror (to) || errno != 0;
 }
