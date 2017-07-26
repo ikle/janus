@@ -19,7 +19,7 @@ static int process (struct janus_conf *c, struct item *i, FILE *to)
 	fputc ('#', to); item_write (NULL, i, to);
 
 	if (strcmp (i->data, "set") == 0)
-		return janus_conf_set (c, i->next);
+		return janus_conf_set (c, i->next, to);
 
 	if (strcmp (i->data, "delete") == 0)
 		return janus_conf_delete (c, i->next);

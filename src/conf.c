@@ -93,7 +93,7 @@ static struct janus_node *current_root (struct janus_conf *c)
 	return c->stack[c->depth];
 }
 
-int janus_conf_set (struct janus_conf *c, struct item *i)
+int janus_conf_set (struct janus_conf *c, struct item *i, FILE *to)
 {
 	struct janus_node *parent, *n;
 	int value;
@@ -108,6 +108,11 @@ int janus_conf_set (struct janus_conf *c, struct item *i)
 
 		if ((value = is_value_node (c, parent, i->data)) < 0)
 			return value;
+
+#if 0
+		if ((ret = check_syntax (c, i->data, to)) != 0)
+			return ret;
+#endif
 
 		n = janus_node_alloc (parent, i->data, value);
 		if (n == NULL)
