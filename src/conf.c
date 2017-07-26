@@ -131,9 +131,15 @@ int janus_conf_delete (struct janus_conf *c, struct item *i)
 	return 0;
 }
 
-int janus_conf_commit (struct janus_conf *c)
+int janus_conf_commit (struct janus_conf *c, int silent, FILE *to)
 {
 	assert (c != NULL);
+
+#if 0
+	if (!silent && ((ret = validate (c, to)) != 0 ||
+			(ret = emit (c)) != 0))
+		return ret;
+#endif
 
 	janus_node_commit (&c->root);
 	return 0;

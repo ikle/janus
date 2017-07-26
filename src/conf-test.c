@@ -13,8 +13,18 @@ static int process (struct janus_conf *c, struct item *i, FILE *to)
 	if (strcmp (i->data, "delete") == 0)
 		return janus_conf_delete (c, i->next);
 
-	if (strcmp (i->data, "commit") == 0)
-		return i->next != NULL ? -EINVAL : janus_conf_commit (c);
+	if (strcmp (i->data, "commit") == 0) {
+		int silent = 0;
+
+		if (i->next != NULL) {
+			if (strcmp ((i = i->next)->data, "silent") == 0)
+				silent = 1;
+			else
+				return -EINVAL;
+		}
+
+		return janus_conf_commit (c, silent, to);
+	}
 
 	if (strcmp (i->data, "show") == 0)
 		return janus_conf_show (c, i->next, to);

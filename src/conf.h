@@ -20,7 +20,7 @@ void janus_conf_init (struct janus_conf *c, const char *template /* path */,
 
 int janus_conf_set    (struct janus_conf *c, struct item *i);
 int janus_conf_delete (struct janus_conf *c, struct item *i);
-int janus_conf_commit (struct janus_conf *c);
+int janus_conf_commit (struct janus_conf *c, int silent, FILE *to);
 
 int janus_conf_show (struct janus_conf *c, struct item *i, FILE *to);
 
