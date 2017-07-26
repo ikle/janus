@@ -12,14 +12,9 @@ static void *align (void *p, uintptr_t n)
 	return (void *) (((uintptr_t) p + (n - 1)) & ~(n - 1));
 }
 
-/*
- * buffer must be properly aligned to store pointers
- *
- * TODO: check alignment here
- */
 void item_pool_init (struct item_pool *c, void *buffer, size_t size)
 {
-	c->head = buffer;
+	c->head = align (buffer, sizeof (c->head));
 	c->tail = buffer + size;
 
 	item_pool_reset (c);

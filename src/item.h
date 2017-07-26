@@ -10,9 +10,9 @@ struct item {
 };
 
 struct item_pool {
+	char *head, *tail;	/* buffer       */
 	char *end;		/* end of data  */
 	struct item *item;	/* current item */
-	char *head, *tail;	/* buffer       */
 };
 
 /* next pointer + alignment with empty string ('\0') */
@@ -24,7 +24,6 @@ struct item_pool {
 #define ITEM_POOL_SIZE(count, len)  ((count) * ITEM_POOL_AUX_MAX + (len) - \
 				     ITEM_POOL_SEP_MIN (count))
 
-/* buffer must be properly aligned to store pointers */
 void item_pool_init (struct item_pool *c, void *buffer, size_t size);
 void item_pool_reset (struct item_pool *c);
 
