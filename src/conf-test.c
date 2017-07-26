@@ -53,7 +53,7 @@ int main (int argc, char *argv[])
 			strcmp (i->data, "where") == 0 ?
 				i->next != NULL ?
 					EINVAL :
-					janus_conf_where (&c, to) :
+					-janus_conf_where (&c, to) :
 			EINVAL;
 
 	return ferror (to) || errno != 0;
