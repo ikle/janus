@@ -208,3 +208,18 @@ int janus_type_check (enum janus_type type, const char *arg, const char *data)
 
 	return 0;
 }
+
+int janus_type_numcmp (const char *a, const char *b)
+{
+	size_t i = strlen (a), j = strlen (b);
+	int diff;
+
+	if ((diff = i - j) != 0)
+		return diff;
+
+	for (; i > 0; --i)
+		if ((diff = a[i - 1] - b[i - 1]) != 0)
+			return diff;
+
+	return 0;
+}

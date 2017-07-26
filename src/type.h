@@ -15,5 +15,6 @@ enum janus_type {
 };
 
 int janus_type_check (enum janus_type type, const char *arg, const char *data);
+int janus_type_numcmp (const char *a, const char *b);
 
 #endif  /* JANUS_TYPE_H */
