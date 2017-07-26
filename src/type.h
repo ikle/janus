@@ -14,6 +14,6 @@ enum janus_type {
 	JANUS_TYPE_EXTERNAL,
 };
 
-int type_check (enum janus_type type, const char *arg, const char *data);
+int janus_type_check (enum janus_type type, const char *arg, const char *data);
 
 #endif  /* JANUS_TYPE_H */

@@ -191,7 +191,7 @@ static int ext_match (const char *path, const char *data)
 	return ret;
 }
 
-int type_check (enum janus_type type, const char *arg, const char *data)
+int janus_type_check (enum janus_type type, const char *arg, const char *data)
 {
 	switch (type) {
 	case JANUS_TYPE_LITERAL:	return strcmp (arg, data) == 0;
