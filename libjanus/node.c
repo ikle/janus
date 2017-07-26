@@ -47,6 +47,7 @@ struct janus_node *janus_node_get (const struct janus_node *root,
 	assert (root != NULL);
 	assert (name != NULL);
 
+	/* TODO: escape names here */
 	template = g_build_filename (root->template, name, NULL);
 	if (g_file_test (template, G_FILE_TEST_IS_DIR))
 		goto found;
