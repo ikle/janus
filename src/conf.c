@@ -150,9 +150,19 @@ static int show_node (struct janus_node *n, FILE *to)
 	struct janus_node *p;
 
 	for (p = n->child; p != NULL; p = p->next) {
+		if (p->child != NULL && p->child->value) {
+			show_node (p, to);
+			continue;
+		}
+
 		if (fputs (p->child == NULL ? "leaf" : "group", to) == EOF ||
-		    !show_colour (p, to) ||
-		    !write_escaped (p->name, to) ||
+		    !show_colour (p, to))
+			return 0;
+
+		if (p->value && !write_escaped (n->name, to))
+			return 0;
+
+		if (!write_escaped (p->name, to) ||
 		    fputc ('\n', to) == EOF)
 			return 0;
 
