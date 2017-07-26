@@ -229,7 +229,7 @@ static int show_node_path (struct janus_node *n, FILE *to)
 	if (n->parent == NULL)  /* root node */
 		return 1;
 
-	return show_node_path (n, to) && write_escaped (n->name, to);
+	return show_node_path (n->parent, to) && write_escaped (n->name, to);
 }
 
 int janus_conf_where (struct janus_conf *c, FILE *to)
