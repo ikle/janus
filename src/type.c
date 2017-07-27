@@ -31,9 +31,14 @@ static int get_number (const char *data, int *n)
 
 static is_number (const char *data)
 {
-	int n;
+	if (data[0] == '0')
+		return data[1] == '\0';
 
-	return get_number (data, &n);
+	for (; *data != '\0'; ++data)
+		if (!isdigit (*data))
+			return 0;
+
+	return 1;
 }
 
 static int get_addr (const char *data, size_t len, int domain, void *a)
