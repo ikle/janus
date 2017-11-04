@@ -11,30 +11,9 @@
 
 #include <stdio.h>
 
+#include "address.h"
 #include "callout.h"
-#include "inet.h"
 #include "seq.h"
-
-enum address_type {
-	ADDRESS_NODE,
-	ADDRESS_NET,
-	ADDRESS_RANGE,
-};
-
-struct address {
-	struct address *next;
-	enum address_type type;
-	union {
-		struct in_addr     node;
-		struct ipv4_masked net;
-		struct ipv4_range  range;
-	};
-};
-
-struct address *address_alloc (enum address_type type);
-void address_free (struct address *o);
-
-SEQ_DECLARE (address)
 
 enum node_type {
 	NODE_STATIC,

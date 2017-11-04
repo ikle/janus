@@ -1,4 +1,4 @@
-TARGETS = callout.o inet.o ipv4-expand.o groups.o
+TARGETS = callout.o inet.o ipv4-expand.o address.o groups.o
 
 CFLAGS += -Wall -O6
 
