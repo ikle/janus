@@ -1,4 +1,4 @@
-TARGETS = inet.o
+TARGETS = inet.o ipv4-expand.o
 
 CFLAGS += -Wall -O6
 
