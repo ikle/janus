@@ -1,4 +1,4 @@
-TARGETS = libjanus service
+TARGETS = groups libjanus service
 
 .PHONY: $(TARGETS)
 
