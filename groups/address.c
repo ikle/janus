@@ -68,14 +68,33 @@ static char *chomp (char *line)
 	return line;
 }
 
+static int add_net (struct ipv4_masked *o, void *cookie)
+{
+	struct address_seq *seq = cookie;
+	struct address *a;
+
+	if ((a = address_alloc (ADDRESS_NET)) == NULL)
+		return 0;
+
+	a->net = *o;
+	address_seq_enqueue (seq, a);
+	return 1;
+}
+
 int address_seq_load (struct address_seq *seq, FILE *from)
 {
 	char line[INET_ADDRSTRLEN * 2];
 	struct address *o;
 
 	while (fgets (line, sizeof (line), from) != NULL)
-		if ((o = address_parse (chomp (line))) != NULL)
-			address_seq_enqueue (seq, o);
+		if ((o = address_parse (chomp (line))) != NULL) {
+			if (o->type == ADDRESS_RANGE) {
+				ipv4_range_expand (&o->range, add_net, seq);
+				address_free (o);
+			}
+			else
+				address_seq_enqueue (seq, o);
+		}
 
 	return !ferror (from);
 }
