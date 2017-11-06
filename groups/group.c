@@ -11,7 +11,57 @@
 #include <string.h>
 #include <arpa/nameser.h>
 
+#include "ipv4-expand.h"
+#include "ipset.h"
 #include "group.h"
+
+static int add_net_cb (struct ipv4_masked *o, void *cookie)
+{
+	struct ipset_session *s = cookie;
+	const char *name = "test", *type = "hash:net";
+
+	return ipset_add_net (s, name, type, o);
+}
+
+static int ipset_out (const char *fmt, ...) { return 0; }
+
+static void group_update (void *cookie)
+{
+	struct group *o = cookie;
+	struct ipset_session *s;
+	const char *name = "test", *type = "hash:net";
+	struct node *n;
+	struct address *a;
+
+	if ((s = ipset_session_init (ipset_out)) == NULL)
+		return;
+
+	if (ipset_envopt_parse (s, IPSET_ENV_EXIST, NULL) != 0 ||
+	    !ipset_create (s, name, type))
+		goto error;
+
+	/* NOTE: ignore following ipset errors */
+
+	for (n = o->seq.head; n != NULL; n = n->next)
+		for (a = n->seq.head; a != NULL; a = a->next)
+			switch (a->type) {
+			case ADDRESS_NODE:
+				ipset_add_node (s, name, type, &a->node);
+				break;
+			case ADDRESS_NET:
+				ipset_add_net (s, name, type, &a->net);
+				break;
+			case ADDRESS_RANGE:
+				ipv4_range_expand (&a->range, add_net_cb, s);
+				break;
+			}
+
+	ipset_swap (s, name, o->name, type);
+	ipset_destroy (s, name, type);
+	ipset_commit (s);
+error:
+	ipset_session_fini (s);
+}
 
 struct group *group_alloc (const char *name)
 {
@@ -24,6 +74,7 @@ struct group *group_alloc (const char *name)
 		goto no_name;
 
 	node_seq_init (&o->seq);
+	callout_init (&o->callout, group_update, o);
 	return o;
 no_name:
 	free (o);
@@ -58,7 +109,7 @@ static int group_load_static (struct group *o, FILE *from)
 {
 	struct node *n;
 
-	if ((n = node_alloc_static (NULL, from)) == NULL)
+	if ((n = node_alloc_static (&o->callout, from)) == NULL)
 		return 0;
 
 	group_filter_out (o, NODE_STATIC);
@@ -91,7 +142,7 @@ static int group_load_named (struct group *o,
 	node_seq_init (&seq);
 
 	while (fgets (line, sizeof (line), from) != NULL)
-		if ((n = node_alloc (NULL, chomp (line))) != NULL)
+		if ((n = node_alloc (&o->callout, chomp (line))) != NULL)
 			node_seq_enqueue (&seq, n);
 
 	if (ferror (from)) {

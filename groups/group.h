@@ -11,12 +11,14 @@
 
 #include <stdio.h>
 
+#include "callout.h"
 #include "node.h"
 #include "seq.h"
 
 struct group {
 	char *name;
 	struct node_seq seq;
+	struct callout callout;
 };
 
 struct group *group_alloc (const char *name);
