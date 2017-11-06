@@ -39,6 +39,18 @@ static void inline type##_seq_fini (struct type##_seq *s,		\
 	}								\
 }									\
 									\
+static inline void type##_seq_move (struct type##_seq *from,		\
+				    struct type##_seq *to,		\
+				    void (*f) (struct type *))		\
+{									\
+	assert (from != NULL);						\
+	assert (to != NULL);						\
+									\
+	type##_seq_fini (to, f);					\
+	to->head = from->head;						\
+	to->tail = &to->head;						\
+}									\
+									\
 static inline void type##_seq_push (struct type##_seq *s,		\
 				    struct type *i)			\
 {									\

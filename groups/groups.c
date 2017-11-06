@@ -50,7 +50,7 @@ void group_filter_out (struct group *o, enum node_type type)
 		else
 			node_free_schedule (n);
 
-	o->seq = seq;
+	node_seq_move (&seq, &o->seq, node_free_schedule);
 }
 
 int group_load (struct group *o, enum node_type type, FILE *from)

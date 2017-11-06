@@ -90,6 +90,5 @@ void node_free_schedule (struct node *o)
 
 void node_update (struct node *o, struct address_seq *seq)
 {
-	address_seq_fini (&o->seq, address_free);
-	o->seq = *seq;
+	address_seq_move (seq, &o->seq, address_free);
 }
