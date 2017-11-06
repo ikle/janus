@@ -9,8 +9,6 @@
 #ifndef JANUS_IPV4_EXPAND_H
 #define JANUS_IPV4_EXPAND_H
 
-#include <arpa/inet.h>
-
 #include "inet.h"
 
 typedef int (ipv4_net_cb) (struct ipv4_masked *o, void *cookie);
