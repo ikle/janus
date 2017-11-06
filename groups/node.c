@@ -126,8 +126,3 @@ void node_free_schedule (struct node *o)
 	callout_init (&o->callout, node_free, NULL);
 	callout_schedule (&o->callout, 0);
 }
-
-void node_update (struct node *o, struct address_seq *seq)
-{
-	address_seq_move (seq, &o->seq, address_free);
-}

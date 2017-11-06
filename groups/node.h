@@ -35,8 +35,6 @@ struct node *node_alloc_domain (const char *name);
 struct node *node_alloc_zone (const char *name);
 void node_free_schedule (struct node *o);
 
-void node_update (struct node *o, struct address_seq *seq);
-
 SEQ_DECLARE (node)
 
 #endif  /* JANUS_GROUPS_NODE_H */
