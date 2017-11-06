@@ -1,6 +1,6 @@
 TARGETS = callout.o inet.o ipv4-expand.o address.o node.o groups.o
 
-CFLAGS += -Wall -O6
+CFLAGS += -Wall -O6 -D_GNU_SOURCE
 
 all: $(TARGETS)
 

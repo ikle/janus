@@ -10,6 +10,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <netinet/in.h>
+#include <netdb.h>
+
 #include "node.h"
 
 static struct node *node_alloc (enum node_type type)
@@ -72,9 +75,45 @@ no_object:
 
 }
 
+static void domain_cb (void *cookie)
+{
+	struct node *o = cookie;
+	struct addrinfo hint, *res, *p;
+	struct sockaddr_in *s;
+	struct address *a;
+	struct address_seq seq;
+
+	hint.ai_flags = AI_IDN | AI_IDN_ALLOW_UNASSIGNED;
+	hint.ai_family = AF_INET;
+	hint.ai_protocol = 0;
+
+	if (getaddrinfo (o->name, NULL, &hint, &res) == 0) {
+		address_seq_init (&seq);
+
+		for (p = res; p != NULL; p = p->ai_next)
+			if ((a = address_alloc (ADDRESS_NODE)) != NULL) {
+				s = (void *) p->ai_addr;
+				a->node = s->sin_addr;
+				address_seq_enqueue (&seq, a);
+			}
+
+		freeaddrinfo (res);
+		address_seq_move (&seq, &o->seq, address_free);
+	}
+
+	callout_schedule (&o->callout, 60);
+}
+
 struct node *node_alloc_domain (const char *name)
 {
-	return node_alloc_named (NODE_DOMAIN, name);
+	struct node *o;
+
+	if ((o = node_alloc_named (NODE_DOMAIN, name)) == NULL)
+		return NULL;
+
+	callout_init (&o->callout, domain_cb, o);
+	callout_schedule (&o->callout, 0);
+	return o;
 }
 
 struct node *node_alloc_zone (const char *name)
