@@ -6,8 +6,8 @@
  * SPDX-License-Identifier: BSD-2-Clause
  */
 
-#ifndef JANUS_GROUPS_H
-#define JANUS_GROUPS_H  1
+#ifndef JANUS_GROUP_H
+#define JANUS_GROUP_H  1
 
 #include <stdio.h>
 
@@ -24,4 +24,4 @@ void group_free (struct group *o);
 
 int group_load (struct group *o, enum node_type type, FILE *from);
 
-#endif  /* JANUS_GROUPS_H */
+#endif  /* JANUS_GROUP_H */

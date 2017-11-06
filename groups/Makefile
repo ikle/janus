@@ -1,4 +1,4 @@
-TARGETS = callout.o inet.o ipv4-expand.o address.o node.o groups.o
+TARGETS = callout.o inet.o ipv4-expand.o address.o node.o group.o
 
 CFLAGS += -Wall -O6 -D_GNU_SOURCE
 

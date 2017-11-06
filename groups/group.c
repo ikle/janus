@@ -11,7 +11,7 @@
 #include <string.h>
 #include <arpa/nameser.h>
 
-#include "groups.h"
+#include "group.h"
 
 struct group *group_alloc (const char *name)
 {
