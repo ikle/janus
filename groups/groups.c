@@ -58,7 +58,7 @@ static int group_load_static (struct group *o, FILE *from)
 {
 	struct node *n;
 
-	if ((n = node_alloc_static (from)) == NULL)
+	if ((n = node_alloc_static (NULL, from)) == NULL)
 		return 0;
 
 	group_filter_out (o, NODE_STATIC);
@@ -76,9 +76,12 @@ static char *chomp (char *line)
 	return line;
 }
 
+typedef struct node *
+node_alloc_named (struct callout *observer, const char *name);
+
 static int group_load_named (struct group *o,
 			     enum node_type type,
-			     struct node *(*node_alloc) (const char *name),
+			     node_alloc_named *node_alloc,
 			     FILE *from)
 {
 	struct node *n;
@@ -88,7 +91,7 @@ static int group_load_named (struct group *o,
 	node_seq_init (&seq);
 
 	while (fgets (line, sizeof (line), from) != NULL)
-		if ((n = node_alloc (chomp (line))) != NULL)
+		if ((n = node_alloc (NULL, chomp (line))) != NULL)
 			node_seq_enqueue (&seq, n);
 
 	if (ferror (from)) {
