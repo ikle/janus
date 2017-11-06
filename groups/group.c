@@ -11,17 +11,8 @@
 #include <string.h>
 #include <arpa/nameser.h>
 
-#include "ipv4-expand.h"
 #include "ipset.h"
 #include "group.h"
-
-static int add_net_cb (struct ipv4_masked *o, void *cookie)
-{
-	struct ipset_session *s = cookie;
-	const char *name = "test", *type = "hash:net";
-
-	return ipset_add_net (s, name, type, o);
-}
 
 static int ipset_out (const char *fmt, ...) { return 0; }
 
@@ -51,8 +42,8 @@ static void group_update (void *cookie)
 			case ADDRESS_NET:
 				ipset_add_net (s, name, type, &a->net);
 				break;
-			case ADDRESS_RANGE:
-				ipv4_range_expand (&a->range, add_net_cb, s);
+			default:
+				/* ignore unknown types */
 				break;
 			}
 
