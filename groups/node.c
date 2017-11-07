@@ -12,6 +12,7 @@
 
 #include <netinet/in.h>
 #include <netdb.h>
+#include <syslog.h>
 
 #include "node.h"
 
@@ -106,6 +107,8 @@ static void domain_cb (void *cookie)
 
 		freeaddrinfo (res);
 		address_seq_move (&seq, &o->seq, address_free);
+
+		syslog (LOG_DEBUG, "resolved %s", o->name);
 
 		if (o->observer != NULL)
 			callout_schedule (o->observer, 0);

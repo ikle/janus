@@ -9,7 +9,9 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include <arpa/nameser.h>
+#include <syslog.h>
 
 #include "ipset.h"
 #include "group.h"
@@ -23,6 +25,9 @@ static void group_update (void *cookie)
 	const char *name = "$test", *type = "hash:net";
 	struct node *n;
 	struct address *a;
+
+	syslog (LOG_DEBUG, "update %s",
+		o->name != NULL ? o->name: "static list");
 
 	if ((s = ipset_session_init (ipset_out)) == NULL)
 		return;
