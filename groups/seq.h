@@ -48,7 +48,7 @@ static inline void type##_seq_move (struct type##_seq *from,		\
 									\
 	type##_seq_fini (to, f);					\
 	to->head = from->head;						\
-	to->tail = &to->head;						\
+	to->tail = from->tail == &from->head ? &to->head : from->tail;	\
 }									\
 									\
 static inline void type##_seq_push (struct type##_seq *s,		\
