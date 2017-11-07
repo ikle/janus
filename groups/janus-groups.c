@@ -6,7 +6,12 @@
  * SPDX-License-Identifier: BSD-2-Clause
  */
 
+#include <limits.h>
 #include <stdio.h>
+#include <stdlib.h>
+
+#include <dirent.h>
+#include <syslog.h>
 #include <unistd.h>
 
 #include "callout.h"
@@ -21,29 +26,72 @@ static void load (struct group *o, enum node_type type, const char *path)
 		return;
 
 	if (!group_load (o, type, f))
-		perror ("W: list not fully loaded");
+		syslog (LOG_WARNING, "group %s list %s is not fully loaded",
+			o->name, path);
 
 	fclose (f);
 }
 
+static void setup_group (const char *root, const char *name)
+{
+	struct group *o;
+	char path[PATH_MAX];
+
+	if ((o = group_alloc (name)) == NULL) {
+		syslog (LOG_ERR, "cannot allocate group %s", name);
+		return;
+	}
+
+	snprintf (path, sizeof (path), "%s/%s/address", root, name);
+	load (o, NODE_STATIC, path);
+
+	snprintf (path, sizeof (path), "%s/%s/domain", root, name);
+	load (o, NODE_DOMAIN, path);
+
+	if (node_seq_is_empty (&o->seq)) {
+		syslog (LOG_INFO, "ignore empty group %s", name);
+		group_free (o);
+	}
+
+	/* let the group live on their own lives, no memory leak! */
+}
+
 int main (void)
 {
-	struct group *g;
+	const char *root = "/var/lib/janus/groups";
+	FILE *f;
+	DIR *d;
+	struct dirent *de;
+
+	if (daemon (0, 0) != 0) {
+		perror ("janus-groups");
+		return 1;
+	}
+
+	openlog ("janus-groups", 0, LOG_DAEMON);
+
+	if ((f = fopen ("/var/run/janus-groups.pid", "w")) == NULL)
+		syslog (LOG_WARNING, "cannot create pid file");
+	else {
+		fprintf (f, "%lu", (unsigned long) getpid ());
+		fclose (f);
+	}
 
 	callout_sys_init ();
 	ipset_load_types ();
 
-	if ((g = group_alloc ("janus-test")) == NULL) {
-		perror ("E: cannot create group");
-		return 1;
+	if ((d = opendir (root)) == NULL) {
+		syslog (LOG_INFO, "cannot open groups directory, exiting");
+		return 0;
 	}
 
-	load (g, NODE_STATIC, "address");
-	load (g, NODE_DOMAIN, "domain");
+	while ((de = readdir (d)) != NULL)
+		setup_group (root, de->d_name);
+
+	closedir (d);
 
 	for (;; sleep (1))
 		callout_process ();
 
-	group_free (g);
 	return 0;
 }
