@@ -7,6 +7,7 @@
  */
 
 #include <limits.h>
+#include <locale.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -62,6 +63,8 @@ int main (void)
 	FILE *f;
 	DIR *d;
 	struct dirent *de;
+
+	setlocale (LC_ALL, "");
 
 	if (daemon (0, 0) != 0) {
 		perror ("janus-groups");
