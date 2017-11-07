@@ -12,6 +12,7 @@ PREFIX ?= /usr/local
 install: $(TARGETS)
 	install -D -d $(DESTDIR)/$(PREFIX)/sbin
 	install -s -m 0755 $^ $(DESTDIR)/$(PREFIX)/sbin
+	install -D -m 0766 start-up $(DESTDIR)/etc/init.d/janus-groups
 
 janus-groups: callout.o
 janus-groups: inet.o ipv4-expand.o address.o node.o group.o

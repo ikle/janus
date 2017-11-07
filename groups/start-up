@@ -1,0 +1,11 @@
+#!/bin/sh
+#
+# /etc/init.d/janus-groups
+#
+
+NAME="janus-groups"
+DESC="Janus Groups Service"
+
+export NAME DESC
+
+janus-service "$@"
