@@ -88,15 +88,17 @@ static void domain_cb (void *cookie)
 	struct address *a;
 	struct address_seq seq;
 
+	memset (&hint, 0, sizeof (hint));
+	hint.ai_family = AF_UNSPEC;
+	hint.ai_socktype = SOCK_DGRAM;
 	hint.ai_flags = AI_IDN | AI_IDN_ALLOW_UNASSIGNED;
-	hint.ai_family = AF_INET;
-	hint.ai_protocol = 0;
 
 	if (getaddrinfo (o->name, NULL, &hint, &res) == 0) {
 		address_seq_init (&seq);
 
 		for (p = res; p != NULL; p = p->ai_next)
-			if ((a = address_alloc (ADDRESS_NODE)) != NULL) {
+			if (p->ai_family == AF_INET &&
+			    (a = address_alloc (ADDRESS_NODE)) != NULL) {
 				s = (void *) p->ai_addr;
 				a->node = s->sin_addr;
 				address_seq_enqueue (&seq, a);
