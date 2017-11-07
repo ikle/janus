@@ -98,11 +98,12 @@ void callout_process (void)
 	struct callout *ready, *next;
 
 	for (; now < current; ++now)
-		for (ready = wheel_step (); ready != NULL; ready = next) {
-			next = ready->next;
+		while ((ready = wheel_step ()) != NULL)
+			for (; ready != NULL; ready = next) {
+				next = ready->next;
 
-			ready->next = NULL;
-			ready->time = 0;
-			ready->fn (ready->cookie);
-		}
+				ready->next = NULL;
+				ready->time = 0;
+				ready->fn (ready->cookie);
+			}
 }
