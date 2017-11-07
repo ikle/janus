@@ -86,7 +86,8 @@ int main (void)
 	}
 
 	while ((de = readdir (d)) != NULL)
-		setup_group (root, de->d_name);
+		if (de->d_name[0] != '.')
+			setup_group (root, de->d_name);
 
 	closedir (d);
 
