@@ -20,7 +20,7 @@ static void group_update (void *cookie)
 {
 	struct group *o = cookie;
 	struct ipset_session *s;
-	const char *name = "test", *type = "hash:net";
+	const char *name = "$test", *type = "hash:net";
 	struct node *n;
 	struct address *a;
 
