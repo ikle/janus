@@ -28,6 +28,7 @@ static void group_update (void *cookie)
 		return;
 
 	if (ipset_envopt_parse (s, IPSET_ENV_EXIST, NULL) != 0 ||
+	    !ipset_create (s, o->name, type) ||
 	    !ipset_create (s, name, type))
 		goto error;
 
