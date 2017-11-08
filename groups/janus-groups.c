@@ -76,7 +76,7 @@ int main (void)
 	if ((f = fopen ("/var/run/janus-groups.pid", "w")) == NULL)
 		syslog (LOG_WARNING, "cannot create pid file");
 	else {
-		fprintf (f, "%lu", (unsigned long) getpid ());
+		fprintf (f, "%lu\n", (unsigned long) getpid ());
 		fclose (f);
 	}
 
