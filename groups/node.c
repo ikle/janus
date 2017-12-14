@@ -49,7 +49,7 @@ struct node *node_alloc_static (struct callout *observer, FILE *from)
 	if ((o = node_alloc (observer, NODE_STATIC)) == NULL)
 		goto no_object;
 
-	if (!address_seq_load (&o->seq, from))
+	if (!address_seq_load (ADDRESS_SCOPE_IP, &o->seq, from))
 		goto no_load;
 
 	if (o->observer != NULL)

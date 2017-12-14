@@ -26,7 +26,7 @@ struct address *address_alloc (enum address_type type)
 	return o;
 }
 
-struct address *address_parse (const char *from)
+struct address *address_parse (enum address_scope scope, const char *from)
 {
 	struct address *o;
 
@@ -81,13 +81,14 @@ static int add_net (struct ipv4_masked *o, void *cookie)
 	return 1;
 }
 
-int address_seq_load (struct address_seq *seq, FILE *from)
+int address_seq_load (enum address_scope scope, struct address_seq *seq,
+		      FILE *from)
 {
 	char line[INET_ADDRSTRLEN * 2];
 	struct address *o;
 
 	while (fgets (line, sizeof (line), from) != NULL)
-		if ((o = address_parse (chomp (line))) != NULL) {
+		if ((o = address_parse (scope, chomp (line))) != NULL) {
 			if (o->type == ADDRESS_RANGE) {
 				ipv4_range_expand (&o->range, add_net, seq);
 				address_free (o);

@@ -14,6 +14,10 @@
 #include "inet.h"
 #include "seq.h"
 
+enum address_scope {
+	ADDRESS_SCOPE_IP,
+};
+
 enum address_type {
 	ADDRESS_NODE,		/* IP address		*/
 	ADDRESS_NET,		/* IP network		*/
@@ -35,7 +39,8 @@ void address_free (struct address *o);
 
 SEQ_DECLARE (address)
 
-struct address *address_parse (const char *from);
-int address_seq_load (struct address_seq *seq, FILE *from);
+struct address *address_parse (enum address_scope scope, const char *from);
+int address_seq_load (enum address_scope scope, struct address_seq *seq,
+		      FILE *from);
 
 #endif  /* JANUS_GROUPS_ADDRESS_H */
