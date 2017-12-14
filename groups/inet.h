@@ -31,6 +31,10 @@ struct ipv6_range {
 	struct in6_addr stop;
 };
 
+struct ip_port_range {
+	unsigned short start, stop;
+};
+
 int get_ipv4 (const char *from, struct in_addr *to);
 int get_ipv6 (const char *from, struct in6_addr *to);
 int get_ipv4_masked (const char *from, struct ipv4_masked *to);
@@ -39,5 +43,6 @@ int get_ipv4_range (const char *from, struct ipv4_range *to);
 int get_ipv6_range (const char *from, struct ipv6_range *to);
 
 int get_service (const char *from, unsigned *to);
+int get_port_range (const char *from, struct ip_port_range *to);
 
 #endif  /* JANUS_INET_H */

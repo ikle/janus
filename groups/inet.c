@@ -104,3 +104,13 @@ found:
 	freeaddrinfo (res);
 	return 1;
 }
+
+int get_port_range (const char *from, struct ip_port_range *to)
+{
+	char tail;
+
+	if (sscanf (from, "%hu-%hu%c", &to->start, &to->stop, &tail) != 2)
+		return 0;
+
+	return 1;
+}
