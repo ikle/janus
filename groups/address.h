@@ -16,12 +16,15 @@
 
 enum address_scope {
 	ADDRESS_SCOPE_IP,
+	ADDRESS_SCOPE_PORT,
 };
 
 enum address_type {
 	ADDRESS_NODE,		/* IP address		*/
 	ADDRESS_NET,		/* IP network		*/
 	ADDRESS_RANGE,		/* IP address range	*/
+	ADDRESS_PORT,		/* IP service port	*/
+	ADDRESS_PORT_RANGE,	/* IP port range	*/
 };
 
 struct address {
@@ -31,6 +34,9 @@ struct address {
 		struct in_addr     node;
 		struct ipv4_masked net;
 		struct ipv4_range  range;
+
+		unsigned             port;
+		struct ip_port_range port_range;
 	};
 };
 

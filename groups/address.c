@@ -26,7 +26,7 @@ struct address *address_alloc (enum address_type type)
 	return o;
 }
 
-struct address *address_parse (enum address_scope scope, const char *from)
+static struct address *address_ip_parse (const char *from)
 {
 	struct address *o;
 
@@ -49,6 +49,39 @@ struct address *address_parse (enum address_scope scope, const char *from)
 	}
 
 	address_free (o);
+	errno = EINVAL;
+	return NULL;
+}
+
+static struct address *address_port_parse (const char *from)
+{
+	struct address *o;
+
+	if ((o = address_alloc (ADDRESS_PORT)) == NULL)
+		return NULL;
+
+	if (get_service (from, &o->port)) {
+		o->type = ADDRESS_PORT;
+		return o;
+	}
+
+	if (get_port_range (from, &o->port_range)) {
+		o->type = ADDRESS_PORT_RANGE;
+		return o;
+	}
+
+	address_free (o);
+	errno = EINVAL;
+	return NULL;
+}
+
+struct address *address_parse (enum address_scope scope, const char *from)
+{
+	switch (scope) {
+	case ADDRESS_SCOPE_IP:		return address_ip_parse (from);
+	case ADDRESS_SCOPE_PORT:	return address_port_parse (from);
+	}
+
 	errno = EINVAL;
 	return NULL;
 }
