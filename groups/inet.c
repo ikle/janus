@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <arpa/inet.h>
+#include <netdb.h>
 
 #include "inet.h"
 
@@ -72,4 +73,32 @@ int get_ipv6_range (const char *from, struct ipv6_range *to)
 		return 0;
 
 	return get_ipv6 (start, &to->start) && get_ipv6 (stop, &to->stop);
+}
+
+unsigned get_service (const char *from)
+{
+	struct addrinfo *res, *p;
+	unsigned port = 0;
+	struct sockaddr_in  *s4;
+	struct sockaddr_in6 *s6;
+
+	if (getaddrinfo (NULL, from, NULL, &res) != 0)
+		return 0;
+
+	for (p = res; p != NULL; p = p->ai_next) {
+		if (p->ai_family == AF_INET) {
+			s4 = (void *) p->ai_addr;
+			port = s4->sin_port;
+			break;
+		}
+
+		if (p->ai_family == AF_INET6) {
+			s6 = (void *) p->ai_addr;
+			port = s6->sin6_port;
+			break;
+		}
+	}
+
+	freeaddrinfo (res);
+	return port;
 }

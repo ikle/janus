@@ -38,4 +38,6 @@ int get_ipv6_masked (const char *from, struct ipv6_masked *to);
 int get_ipv4_range (const char *from, struct ipv4_range *to);
 int get_ipv6_range (const char *from, struct ipv6_range *to);
 
+unsigned get_service (const char *from);
+
 #endif  /* JANUS_INET_H */
