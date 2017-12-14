@@ -38,7 +38,7 @@ int get_ipv4_masked (const char *from, struct ipv4_masked *to)
 		    addr, &to->mask, &tail) != 2)
 		return 0;
 
-	return get_ipv4 (addr, &to->addr);
+	return to->mask <= 32 && get_ipv4 (addr, &to->addr);
 }
 
 int get_ipv6_masked (const char *from, struct ipv6_masked *to)
@@ -49,7 +49,7 @@ int get_ipv6_masked (const char *from, struct ipv6_masked *to)
 		    addr, &to->mask, &tail) != 2)
 		return 0;
 
-	return get_ipv6 (addr, &to->addr);
+	return to->mask <= 128 && get_ipv6 (addr, &to->addr);
 }
 
 int get_ipv4_range (const char *from, struct ipv4_range *to)
