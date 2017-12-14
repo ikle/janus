@@ -15,9 +15,9 @@
 #include "seq.h"
 
 enum address_type {
-	ADDRESS_NODE,
-	ADDRESS_NET,
-	ADDRESS_RANGE,
+	ADDRESS_NODE,		/* IP address		*/
+	ADDRESS_NET,		/* IP network		*/
+	ADDRESS_RANGE,		/* IP address range	*/
 };
 
 struct address {
