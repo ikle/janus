@@ -75,10 +75,9 @@ int get_ipv6_range (const char *from, struct ipv6_range *to)
 	return get_ipv6 (start, &to->start) && get_ipv6 (stop, &to->stop);
 }
 
-unsigned get_service (const char *from)
+int get_service (const char *from, unsigned *to)
 {
 	struct addrinfo *res, *p;
-	unsigned port = 0;
 	struct sockaddr_in  *s4;
 	struct sockaddr_in6 *s6;
 
@@ -88,17 +87,20 @@ unsigned get_service (const char *from)
 	for (p = res; p != NULL; p = p->ai_next) {
 		if (p->ai_family == AF_INET) {
 			s4 = (void *) p->ai_addr;
-			port = s4->sin_port;
-			break;
+			*to = s4->sin_port;
+			goto found;
 		}
 
 		if (p->ai_family == AF_INET6) {
 			s6 = (void *) p->ai_addr;
-			port = s6->sin6_port;
-			break;
+			*to = s6->sin6_port;
+			goto found;
 		}
 	}
 
 	freeaddrinfo (res);
-	return port;
+	return 0;
+found:
+	freeaddrinfo (res);
+	return 1;
 }
