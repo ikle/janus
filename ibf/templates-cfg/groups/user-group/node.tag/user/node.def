@@ -1,0 +1,5 @@
+multi:
+type: txt
+help: Имя пользователя
+
+syntax:expression: exec "${vyatta_libdir}/avadata/ibf/check_username.pl $VAR(@)"
