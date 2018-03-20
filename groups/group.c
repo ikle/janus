@@ -46,7 +46,8 @@ static void group_update (void *cookie)
 				ipset_add_node (s, name, type, &a->node);
 				break;
 			case ADDRESS_NET:
-				ipset_add_net (s, name, type, &a->net);
+				ipset_add_net (s, name, type, &a->net.addr,
+					       a->net.mask);
 				break;
 			default:
 				/* ignore unknown types */

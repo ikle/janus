@@ -16,8 +16,6 @@
 #include <libipset/session.h>
 #include <libipset/parse.h>
 
-#include "inet.h"
-
 static inline int
 ipset_set_target (struct ipset_session *s, const char *name, const char *type)
 {
@@ -71,11 +69,11 @@ ipset_add_node (struct ipset_session *s, const char *name, const char *type,
 
 static inline int
 ipset_add_net (struct ipset_session *s, const char *name, const char *type,
-	       struct ipv4_masked *net)
+	       struct in_addr *addr, unsigned mask)
 {
 	return	ipset_set_target (s, name, type) &&
-		ipset_set_ip (s, &net->addr) &&
-		ipset_set_u8 (s, IPSET_OPT_CIDR, net->mask) &&
+		ipset_set_ip (s, addr) &&
+		ipset_set_u8 (s, IPSET_OPT_CIDR, mask) &&
 		ipset_cmd (s, IPSET_CMD_ADD, 0) == 0;
 }
 
