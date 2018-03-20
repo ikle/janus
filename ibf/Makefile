@@ -1,6 +1,5 @@
 PREFIX ?= /usr/local
 
-sbindir ?= $(PREFIX)/sbin
 datadir ?= $(PREFIX)/share
 cfgdir   = $(datadir)/avadata/ibf/templates-cfg
 
@@ -16,8 +15,6 @@ cpiop = find  . ! -regex '\(.*~\|.*\.bak\|.*\.swp\|.*\#.*\#\)' -print0 | \
   cpio -0pd
 
 install: all
-	mkdir -p $(DESTDIR)$(sbindir)
-	install -m 00755 src/ibf-gate  $(DESTDIR)$(sbindir)
-	install -m 04755 src/ibf-login $(DESTDIR)$(sbindir)
+	make -C src install DESTDIR='$(DESTDIR)' PREFIX='$(PREFIX)'
 	mkdir -p $(DESTDIR)$(cfgdir)
 	cd templates-cfg; $(cpiop) $(DESTDIR)$(cfgdir)
