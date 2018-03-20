@@ -10,6 +10,7 @@ PREFIX ?= /usr/local
 install: $(TARGETS)
 	install -D -d $(DESTDIR)/$(PREFIX)/sbin
 	install -s -m 0755 $^ $(DESTDIR)/$(PREFIX)/sbin
+	chmod u+s $(DESTDIR)/$(PREFIX)/sbin/ibf-login
 	install -D -d $(DESTDIR)/$(PREFIX)/share/ibf
 	install -m 0644 avatar.png $(DESTDIR)/$(PREFIX)/share/ibf
 
