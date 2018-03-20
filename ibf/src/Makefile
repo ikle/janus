@@ -8,8 +8,8 @@ clean:
 PREFIX ?= /usr/local
 
 install: $(TARGETS)
-	install -D -d $(DESTDIR)/$(PREFIX)/bin
-	install -s -m 0755 $^ $(DESTDIR)/$(PREFIX)/bin
+	install -D -d $(DESTDIR)/$(PREFIX)/sbin
+	install -s -m 0755 $^ $(DESTDIR)/$(PREFIX)/sbin
 
 cgi.o conf.o: CFLAGS  += `pkg-config --cflags glib-2.0`
 
