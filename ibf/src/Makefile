@@ -22,3 +22,4 @@ ibf-login ibf-gate: LDFLAGS += `pkg-config --libs   libipset glib-2.0` -lfcgi
 
 ibf-login: conf.o cgi.o pam.o login-page.o
 ibf-gate: cgi.o
+ibf-init: service.o

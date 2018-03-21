@@ -1,5 +1,9 @@
 #include <stdio.h>
+#include <string.h>
+
 #include <sys/stat.h>
+
+#include "service.h"
 
 static void cfg_add_base (FILE *to, const char *name, const char *user,
 			  int port)
@@ -72,12 +76,40 @@ static int cfg_login (int port)
 	return 1;
 }
 
-int main (int agc, char *argv[])
+static int stop (void)
 {
+	return service_stop ("/var/run/ibf/ibf-gate.pid",  5) &&
+	       service_stop ("/var/run/ibf/ibf-login.pid", 5);
+}
+
+static int start (void)
+{
+	(void) stop ();
+
+	if (!cfg_gate ("lm.local") || !cfg_login (1025))
+		return 0;
+
+	if (!service_start ("lighttpd -f /var/run/ibf/ibf-gate.conf") ||
+	    !service_start ("lighttpd -f /var/run/ibf/ibf-login.conf")) {
+		(void) stop ();
+		return 0;
+	}
+
+	return 1;
+}
+
+int main (int argc, char *argv[])
+{
+	int ret = 0;
+
 	(void) mkdir ("/var/run/ibf", 0755);
 
-	cfg_gate  ("lm.local");
-	cfg_login (1025);
+	if (argc != 2)
+		return 0;
 
-	return 0;
+	ret = strcmp (argv[1], "stop")  == 0 ? stop ()  :
+	      strcmp (argv[1], "start") == 0 ? start () :
+	      0;
+
+	return ret ? 0 : 1;
 }
