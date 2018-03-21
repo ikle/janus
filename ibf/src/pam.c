@@ -15,15 +15,22 @@ static int login_cb (int num_msg, const struct pam_message **msg,
 		     struct pam_response **resp, void *appdata_ptr)
 {
 	struct pam_response *reply;
+	int i;
 
-	if(num_msg != 1 || (*msg)[0].msg_style != PAM_PROMPT_ECHO_OFF)
+	if (num_msg <= 0 || num_msg > PAM_MAX_NUM_MSG ||
+	    (reply = calloc (num_msg, sizeof (*reply))) == NULL)
 		return PAM_CONV_ERR;
 
-	if ((reply = malloc (sizeof (*reply))) == NULL)  /* num_msg times */
-		return PAM_CONV_ERR;
-
-	reply[0].resp = strdup (appdata_ptr);  /* ignore errors */
-	reply[0].resp_retcode = 0;  /* unused */
+	for (i = 0; i < num_msg; ++i)
+		switch ((*msg)[i].msg_style) {
+		case PAM_PROMPT_ECHO_OFF:
+			/* ignore errors */
+			reply[i].resp = strdup (appdata_ptr);
+			break;
+		default:
+			reply[i].resp = strdup ("");
+			break;
+		}
 
 	*resp = reply;
 	return PAM_SUCCESS;
