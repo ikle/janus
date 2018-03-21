@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <sys/stat.h>
 
 static void cfg_add_base (FILE *to, const char *name, const char *user,
 			  int port)
@@ -37,7 +38,7 @@ static int cfg_gate (const char *pub)
 {
 	FILE *to;
 
-	if ((to = fopen ("ibf-gate.conf", "w")) == NULL)
+	if ((to = fopen ("/var/run/ibf/ibf-gate.conf", "w")) == NULL)
 		return 0;
 
 	fprintf (to, "server.bind           = \"127.0.0.1\"\n");
@@ -60,7 +61,7 @@ static int cfg_login (int port)
 {
 	FILE *to;
 
-	if ((to = fopen ("ibf-login.conf", "w")) == NULL)
+	if ((to = fopen ("/var/run/ibf/ibf-login.conf", "w")) == NULL)
 		return 0;
 
 	cfg_add_base (to, "ibf-login", "root", port);
@@ -73,6 +74,8 @@ static int cfg_login (int port)
 
 int main (int agc, char *argv[])
 {
+	(void) mkdir ("/var/run/ibf", 0755);
+
 	cfg_gate  ("lm.local");
 	cfg_login (1025);
 
