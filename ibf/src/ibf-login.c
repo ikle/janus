@@ -110,7 +110,7 @@ extern const char _binary_login_head_size,    _binary_login_tail_size;
 static void show_login (cgi_req *c, const char *ref)
 {
 	cgi_puts ("Status: 200 OK\r\n"
-		  "Content-Type: text/html\r\n\r\n", c);
+		  "Content-Type: text/html; charset=utf-8\r\n\r\n", c);
 
 	cgi_write (_binary_login_head_start,
 		   (size_t) &_binary_login_head_size, c);
