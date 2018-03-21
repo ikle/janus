@@ -33,14 +33,15 @@ static void cfg_add_fgci (FILE *to, const char *name)
 	);
 }
 
-static int cfg_gate (int port, const char *pub)
+static int cfg_gate (const char *pub)
 {
 	FILE *to;
 
 	if ((to = fopen ("ibf-gate.conf", "w")) == NULL)
 		return 0;
 
-	cfg_add_base (to, "ibf-gate", "nobody", port);
+	fprintf (to, "server.bind           = \"127.0.0.1\"\n");
+	cfg_add_base (to, "ibf-gate", "nobody", 2);
 
 	fprintf (
 		to,
@@ -72,7 +73,7 @@ static int cfg_login (int port)
 
 int main (int agc, char *argv[])
 {
-	cfg_gate  (1026, "lm.local");
+	cfg_gate  ("lm.local");
 	cfg_login (1025);
 
 	return 0;
