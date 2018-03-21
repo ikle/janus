@@ -1,8 +1,10 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include <sys/stat.h>
 
+#include "conf.h"
 #include "service.h"
 
 static void cfg_add_base (FILE *to, const char *name, const char *user,
@@ -82,11 +84,48 @@ static int stop (void)
 	       service_stop ("/var/run/ibf/ibf-login.pid", 5);
 }
 
+static int get_port (void)
+{
+	struct conf *c;
+	char buf [16];
+	int port;
+
+	if ((c = conf_clone (NULL, "service", "login", "port", NULL)) == NULL)
+		return 0;
+
+	if (!conf_get (c, buf, sizeof (buf)) ||
+	    (port = atoi (buf)) < 1 || port > 65535)
+		port = 0;;
+
+	conf_free (c);
+	return port;
+}
+
+static int get_pub (void *buf, size_t size)
+{
+	struct conf *c;
+	int ret;
+
+	c = conf_clone (NULL, "service", "login", "public-address", NULL);
+	if (c == NULL)
+		return 0;
+
+	ret = conf_get (c, buf, size);
+	conf_free (c);
+	return ret;
+}
+
 static int start (void)
 {
+	int port;
+	char pub [256];
+
+	if ((port = get_port ()) == 0 || !get_pub (pub, sizeof (pub)))
+		return 0;
+
 	(void) stop ();
 
-	if (!cfg_gate ("lm.local", 1025) || !cfg_login (1025))
+	if (!cfg_gate (pub, port) || !cfg_login (port))
 		return 0;
 
 	if (!service_start ("lighttpd -f /var/run/ibf/ibf-gate.conf") ||

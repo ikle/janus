@@ -1,0 +1,4 @@
+help: Сервис авторизации IBF
+
+update: /usr/sbin/ibf-init start
+delete: /usr/sbin/ibf-init stop

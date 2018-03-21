@@ -1,0 +1,4 @@
+help: Публичный адрес или DNS имя сервера авторизации IBF
+type: txt
+
+syntax:expression: vchk $VAR(@) "ipv4-v6" || vchk $VAR(@) "idn"
