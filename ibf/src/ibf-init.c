@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include <sys/stat.h>
+#include <unistd.h>
 
 #include "conf.h"
 #include "service.h"
@@ -141,7 +142,8 @@ int main (int argc, char *argv[])
 {
 	int ret = 0;
 
-	(void) mkdir ("/var/run/ibf", 0755);
+	(void) mkdir ("/var/run/ibf", 0775);
+	(void) chown ("/var/run/ibf", -1, 33 /* www-data */);
 
 	if (argc != 2)
 		return 1;
