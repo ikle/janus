@@ -5,3 +5,5 @@
 *.so.*
 ibf-gate
 ibf-login
+ibf-init
+*.conf

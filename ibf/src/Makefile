@@ -1,4 +1,4 @@
-TARGETS += ibf-login ibf-gate
+TARGETS += ibf-login ibf-gate ibf-init
 
 all: $(TARGETS)
 
