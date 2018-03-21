@@ -48,6 +48,8 @@ static inline int cgi_puts (const char *s, cgi_req *o)
 	return FCGX_PutS (s, o->out);
 }
 
+int cgi_puts_escaped (const char *s, cgi_req *o);
+
 static inline int cgi_printf (cgi_req *o, const char *fmt, ...)
 {
 	va_list ap;

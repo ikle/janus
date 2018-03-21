@@ -12,6 +12,47 @@
 
 #include "cgi.h"
 
+int cgi_puts_escaped (const char *s, cgi_req *o)
+{
+	int ret, n;
+
+	for (; *s != '\0'; ++s)
+		switch (*s) {
+		case '"':
+			if ((ret = FCGX_PutS ("&quot;", o->out)) < 0)
+				return -1;
+
+			n += 6;
+			break;
+		case '&':
+			if ((ret = FCGX_PutS ("&amp;", o->out)) < 0)
+				return -1;
+
+			n += 5;
+			break;
+		case '<':
+			if ((ret = FCGX_PutS ("&lt;", o->out)) < 0)
+				return -1;
+
+			n += 4;
+			break;
+		case '>':
+			if ((ret = FCGX_PutS ("&gt;", o->out)) < 0)
+				return -1;
+
+			n += 4;
+			break;
+		default:
+			if ((ret = FCGX_PutChar (*s, o->out)) < 0)
+				return -1;
+
+			++n;
+			break;
+		}
+
+	return n;
+}
+
 char *cgi_uri_escape (const char *s)
 {
 	return s == NULL ? NULL : g_uri_escape_string (s, NULL, FALSE);

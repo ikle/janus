@@ -115,12 +115,11 @@ static void show_login (cgi_req *c, const char *ref)
 	cgi_write (_binary_login_head_start,
 		   (size_t) &_binary_login_head_size, c);
 
-	if (ref != NULL)
-		cgi_printf (
-			c,
-			"<input type=\"hidden\" name=\"ref\" value=\"%s\">",
-			ref
-		);
+	if (ref != NULL) {
+		cgi_puts ("<input type=\"hidden\" name=\"ref\" value=\">", c);
+		cgi_puts_escaped (ref, c);
+		cgi_puts ("\">", c);
+	}
 
 	cgi_write (_binary_login_tail_start,
 		   (size_t) &_binary_login_tail_size, c);
