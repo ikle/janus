@@ -144,7 +144,7 @@ int main (int argc, char *argv[])
 	(void) mkdir ("/var/run/ibf", 0755);
 
 	if (argc != 2)
-		return 0;
+		return 1;
 
 	ret = strcmp (argv[1], "stop")  == 0 ? stop ()  :
 	      strcmp (argv[1], "start") == 0 ? start () :
