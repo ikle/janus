@@ -14,9 +14,6 @@ static void process (cgi_req *o)
 	if (lm == NULL || host == NULL || uri == NULL)
 		goto no_vars;
 
-	if (strncmp (uri, "/gate/", 6) == 0)
-		uri += 6;
-
 	if ((host_e = cgi_uri_escape (host)) == NULL)
 		goto no_host;
 
