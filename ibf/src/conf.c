@@ -57,6 +57,9 @@ struct conf *conf_alloc (const char *root)
 	if ((o = malloc (sizeof (*o))) == NULL)
 		return NULL;
 
+	if (root == NULL)
+		root = getenv ("VYATTA_TEMP_CONFIG_DIR");
+
 	o->root = strdup (root == NULL ? "/var/run/config/active" : root);
 
 	if (o->root == NULL || !conf_init (o))
