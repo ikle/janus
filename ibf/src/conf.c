@@ -23,15 +23,19 @@ struct conf {
 
 static int conf_init (struct conf *o)
 {
-	if ((o->dir = opendir (o->root)) != NULL) {
-		o->file = NULL;
+	char path[512];
+
+	snprintf (path, sizeof (path), "%s/node.val", o->root);
+
+	if ((o->file = fopen (path, "r")) != NULL) {
+		o->dir = NULL;
 		return 1;
 	}
 
-	if ((o->file = fopen (o->root, "r")) == NULL)
-		return 0;
+	if ((o->dir = opendir (o->root)) != NULL)
+		return 1;
 
-	return 1;
+	return 0;
 }
 
 static void conf_fini (struct conf *o)
