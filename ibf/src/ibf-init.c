@@ -38,7 +38,7 @@ static void cfg_add_fgci (FILE *to, const char *name)
 	);
 }
 
-static int cfg_gate (const char *pub)
+static int cfg_gate (const char *pub, int pub_port)
 {
 	FILE *to;
 
@@ -51,8 +51,8 @@ static int cfg_gate (const char *pub)
 	fprintf (
 		to,
 		"server.modules = ( \"mod_fastcgi\", \"mod_setenv\" )\n\n"
-		"setenv.add-environment = ( \"LM\" => \"%s\" )\n\n",
-		pub
+		"setenv.add-environment = ( \"LM\" => \"%s:%d\" )\n\n",
+		pub, pub_port
 	);
 
 	cfg_add_fgci (to, "ibf-gate");
@@ -86,7 +86,7 @@ static int start (void)
 {
 	(void) stop ();
 
-	if (!cfg_gate ("lm.local") || !cfg_login (1025))
+	if (!cfg_gate ("lm.local", 1025) || !cfg_login (1025))
 		return 0;
 
 	if (!service_start ("lighttpd -f /var/run/ibf/ibf-gate.conf") ||
