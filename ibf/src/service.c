@@ -26,6 +26,7 @@ int service_startv (const char *fmt, va_list ap)
 	if ((cmd = malloc (len)) == NULL)
 		return 0;
 
+	vsnprintf (cmd, len, fmt, ap);
 	ret = system (cmd);
 	free (cmd);
 
