@@ -11,12 +11,10 @@ install: $(TARGETS)
 	install -D -d $(DESTDIR)/$(PREFIX)/sbin
 	install -s -m 0755 $^ $(DESTDIR)/$(PREFIX)/sbin
 	chmod u+s $(DESTDIR)/$(PREFIX)/sbin/ibf-login
-	install -D -d $(DESTDIR)/$(PREFIX)/share/ibf
-	install -m 0644 avatar.png $(DESTDIR)/$(PREFIX)/share/ibf
 
 cgi.o conf.o: CFLAGS  += `pkg-config --cflags glib-2.0`
 
-login-page.o: login-head login-tail
+login-page.o: login-head login-tail avatar.png
 	$(LD) -r -b binary -o $@ $^
 
 ibf-login: LDFLAGS += -lpam
