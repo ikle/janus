@@ -121,8 +121,15 @@ static int start (void)
 	int port;
 	char pub [256];
 
-	if ((port = get_port ()) == 0 || !get_pub (pub, sizeof (pub)))
+	if ((port = get_port ()) == 0) {
+		fprintf (stderr, "ibf login: port required\n");
 		return 0;
+	}
+
+	if (!get_pub (pub, sizeof (pub))) {
+		fprintf (stderr, "ibf login: public-address required\n");
+		return 0;
+	}
 
 	(void) stop ();
 
