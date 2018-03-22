@@ -4,6 +4,7 @@
 #include <arpa/ibf/inet.h>
 #include <syslog.h>
 
+#include "chain-hash.h"
 #include "cgi.h"
 #include "conf.h"
 #include "ipset.h"
@@ -55,17 +56,17 @@ static int ipset_out (const char *fmt, ...) { return 0; }
 
 static void add_group (const char *group, const char *user, struct in_addr *ip)
 {
+	char hash[28];
 	struct ipset_session *s;
 	const char *type = "hash:ip";
 
 	if (!is_user_in_group (user, group) ||
+	    !get_chain_hash ("groups", group, "user", hash) ||
 	    (s = ipset_session_init (ipset_out)) == NULL)
 		return;
 
-	/* todo: mangle group name here */
-
 	if (ipset_envopt_parse (s, IPSET_ENV_EXIST, NULL) != 0 ||
-	    !ipset_create (s, group, type) ||
+	    !ipset_create (s, hash, type) ||
 	    !ipset_set_u32 (s, IPSET_OPT_TIMEOUT, get_ttl (group)))
 		goto error;
 
@@ -163,6 +164,7 @@ int main (int argc, char *argv[])
 {
 	cgi_req o;
 
+	init_chain_hash ();
 	openlog ("ibf-login", 0, LOG_DAEMON);
 
 	if (cgi_init () != 0 || cgi_req_init (&o) != 0) {
