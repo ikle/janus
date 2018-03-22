@@ -104,9 +104,10 @@ char **cgi_load_vars (cgi_req *o, char *buf, size_t size)
 
 	if (strcmp (method, "POST") != 0 ||
 	    (p = FCGX_GetParam ("CONTENT_LENGTH", o->envp)) == NULL ||
-	    (len = atoi (p)) <= 0 || len > size ||
+	    (len = atoi (p)) <= 0 || (len + 1) > size ||
 	    cgi_read (buf, len, o) != len)
 		return NULL;
 
+	buf[len] = '\0';
 	return cgi_parse_vars (buf);
 }
