@@ -5,3 +5,13 @@ help: Группа пользователей
 syntax:expression: vchk $VAR(@) "group-name"
 
 val_help: txt; Имя группы
+
+begin: /usr/lib/ibf/avadata/ibf/ipset.pl	\
+		--action=update-set	\
+		--set-type=user		\
+		--set-name=$VAR(@)
+
+delete: /usr/lib/ibf/avadata/ibf/ipset.pl	\
+		--action=delete-set	\
+		--set-type=user		\
+		--set-name=$VAR(@)
