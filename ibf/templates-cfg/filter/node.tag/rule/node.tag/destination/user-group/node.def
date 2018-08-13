@@ -3,9 +3,9 @@ help: Группа пользователей
 
 syntax:expression: vchk $VAR(@) "group-name-neg"
 
-commit:expression: exec "source /usr/lib/ibf/avadata/ibf/neoshell.functions; \
+commit:expression: exec "source /usr/lib/ibf/edge/neoshell.functions; \
 		   nonneg=`echo $VAR(@) | sed -r 's,^!,,'` ; \
 		   config_exists groups $VAR(../.) $nonneg > /dev/null 2>&1"; \
 		   "Некорректная группа пользователей"
-allowed: source /usr/lib/ibf/avadata/ibf/neoshell.functions
+allowed: source /usr/lib/ibf/edge/neoshell.functions
 	 config_list_tags "groups user-group"

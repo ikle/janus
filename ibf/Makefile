@@ -1,7 +1,7 @@
 PREFIX ?= /usr/local
 
 datadir ?= $(PREFIX)/share
-cfgdir   = $(datadir)/avadata/ibf/templates-cfg
+cfgdir   = $(datadir)/edge/templates-cfg
 
 .PHONY: all clean install
 

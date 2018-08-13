@@ -6,12 +6,12 @@ syntax:expression: vchk $VAR(@) "group-name"
 
 val_help: txt; Имя группы
 
-begin: /usr/lib/ibf/avadata/ibf/ipset.pl	\
+begin: /usr/lib/ibf/edge/ipset.pl	\
 		--action=update-set	\
 		--set-type=user		\
 		--set-name=$VAR(@)
 
-delete: /usr/lib/ibf/avadata/ibf/ipset.pl	\
+delete: /usr/lib/ibf/edge/ipset.pl	\
 		--action=delete-set	\
 		--set-type=user		\
 		--set-name=$VAR(@)
