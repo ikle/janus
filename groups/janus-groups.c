@@ -15,6 +15,8 @@
 #include <syslog.h>
 #include <unistd.h>
 
+#include <bsd/unistd.h>
+
 #include "callout.h"
 #include "ipset.h"
 #include "group.h"
@@ -65,6 +67,8 @@ int main (void)
 	struct dirent *de;
 
 	setlocale (LC_ALL, "");
+
+	closefrom (3);
 
 	if (daemon (0, 0) != 0) {
 		perror ("janus-groups");

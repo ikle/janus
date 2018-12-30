@@ -17,4 +17,4 @@ install: $(TARGETS)
 janus-groups: callout.o
 janus-groups: inet.o ipv4-expand.o address.o node.o group.o
 janus-groups: CFLAGS  += `pkg-config libipset --cflags`
-janus-groups: LDFLAGS += `pkg-config libipset --libs`
+janus-groups: LDFLAGS += `pkg-config libipset --libs` -lbsd
