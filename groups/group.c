@@ -16,7 +16,17 @@
 #include "ipset.h"
 #include "group.h"
 
-static int ipset_out (const char *fmt, ...) { return 0; }
+#ifndef IPSET_V7
+#define IPSET_OUT_ARG
+static int ipset_out (const char *fmt, ...)
+#else
+#define IPSET_OUT_ARG  , NULL
+static
+int ipset_out (struct ipset_session *session, void *p, const char *fmt, ...)
+#endif
+{
+	return 0;
+}
 
 static void group_update (void *cookie)
 {
@@ -29,7 +39,7 @@ static void group_update (void *cookie)
 	syslog (LOG_DEBUG, "update %s",
 		o->name != NULL ? o->name: "static list");
 
-	if ((s = ipset_session_init (ipset_out)) == NULL)
+	if ((s = ipset_session_init (ipset_out IPSET_OUT_ARG)) == NULL)
 		return;
 
 	if (ipset_envopt_parse (s, IPSET_ENV_EXIST, NULL) != 0 ||
