@@ -52,7 +52,17 @@ no_node:
 
 /* ipset helpers */
 
-static int ipset_out (const char *fmt, ...) { return 0; }
+#ifndef IPSET_V7
+#define IPSET_OUT_ARG
+static int ipset_out (const char *fmt, ...)
+#else
+#define IPSET_OUT_ARG  , NULL
+static
+int ipset_out (struct ipset_session *session, void *p, const char *fmt, ...)
+#endif
+{
+	return 0;
+}
 
 static void add_group (const char *group, const char *user, struct in_addr *ip)
 {
@@ -62,7 +72,7 @@ static void add_group (const char *group, const char *user, struct in_addr *ip)
 
 	if (!is_user_in_group (user, group) ||
 	    !get_chain_hash ("groups", group, "user", hash) ||
-	    (s = ipset_session_init (ipset_out)) == NULL)
+	    (s = ipset_session_init (ipset_out IPSET_OUT_ARG)) == NULL)
 		return;
 
 	if (ipset_envopt_parse (s, IPSET_ENV_EXIST, NULL) != 0 ||
