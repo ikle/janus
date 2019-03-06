@@ -17,6 +17,12 @@
 #include "group.h"
 
 #ifndef IPSET_V7
+static void
+ipset_envopt_set(struct ipset_session *s, enum ipset_envopt opt)
+{
+	ipset_envopt_parse (s, opt, NULL);
+}
+
 #define IPSET_OUT_ARG
 static int ipset_out (const char *fmt, ...)
 #else
@@ -42,8 +48,9 @@ static void group_update (void *cookie)
 	if ((s = ipset_session_init (ipset_out IPSET_OUT_ARG)) == NULL)
 		return;
 
-	if (ipset_envopt_parse (s, IPSET_ENV_EXIST, NULL) != 0 ||
-	    !ipset_create (s, o->name, type) ||
+	ipset_envopt_set (s, IPSET_ENV_EXIST);
+
+	if (!ipset_create (s, o->name, type) ||
 	    !ipset_create (s, name, type))
 		goto error;
 
