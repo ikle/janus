@@ -96,7 +96,7 @@ static int get_port (void)
 
 	if (!conf_get (c, buf, sizeof (buf)) ||
 	    (port = atoi (buf)) < 1 || port > 65535)
-		port = 0;;
+		port = 0;
 
 	conf_free (c);
 	return port;
