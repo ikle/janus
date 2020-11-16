@@ -1,0 +1,5 @@
+multi:
+type: txt
+help: Имя пользователя
+
+syntax:expression: exec "/usr/lib/ibf/edge/check_username.pl $VAR(@)"
